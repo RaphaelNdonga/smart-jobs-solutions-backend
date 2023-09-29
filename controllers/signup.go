@@ -6,14 +6,32 @@ import (
 	"smartjobsolutions/types"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func PostSignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
-		fmt.Println("POST sign-up: bind json error")
+		errorMsg := "POST sign-up: bind json error"
+		fmt.Println(errorMsg)
+		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
 		return
 	}
-	fmt.Print("success: ", userDetails)
-	ctx.IndentedJSON(http.StatusOK, userDetails)
+	password := userDetails.Password
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 0)
+	if err != nil {
+		errorMsg := "POST sign-up: hashing err"
+		fmt.Println(errorMsg)
+		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
+		return
+	}
+	userDetailsDB := types.UserDetailsDB{
+		Username:       userDetails.Username,
+		Email:          userDetails.Email,
+		HashedPassword: hash,
+		UserType:       userDetails.UserType,
+	}
+
+	fmt.Print("success: ", userDetailsDB)
+	ctx.IndentedJSON(http.StatusOK, userDetailsDB)
 }

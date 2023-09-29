@@ -6,3 +6,10 @@ type UserDetails struct {
 	Password string `json:"password"`
 	UserType string `json:"userType"`
 }
+
+type UserDetailsDB struct {
+	Username       string
+	Email          string
+	HashedPassword []byte
+	UserType       string
+}
