@@ -15,7 +15,7 @@ func main() {
 
 	router.Use(cors.Default())
 
-	router.POST("/sign-up", controllers.PostSignUp)
+	router.POST("/sign-up", controllers.SignUp)
 
 	router.Run(":8000")
 }

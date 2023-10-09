@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"smartjobsolutions/types"
+
+	_ "github.com/lib/pq"
 )
 
 var db *sql.DB

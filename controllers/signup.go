@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"smartjobsolutions/database"
 	"smartjobsolutions/types"
 
-	"smartjobsolutions/database"
-
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func PostSignUp(ctx *gin.Context) {
+func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
 		errorMsg := "POST sign-up: bind json error"
