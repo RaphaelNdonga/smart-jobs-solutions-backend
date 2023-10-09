@@ -10,6 +10,6 @@ type UserDetails struct {
 type UserDetailsDB struct {
 	Username       string
 	Email          string
-	HashedPassword []byte
+	HashedPassword string
 	UserType       string
 }
