@@ -33,6 +33,30 @@ func SignUp(ctx *gin.Context) {
 	}
 
 	fmt.Print("success: ", userDetailsDB)
-	database.AddUser(userDetailsDB)
+	db := database.GetDB()
+	database.AddUser(db, userDetailsDB)
 	ctx.IndentedJSON(http.StatusOK, userDetailsDB)
+}
+
+func SignIn(ctx *gin.Context) {
+	userDetails := types.UserDetails{}
+
+	if err := ctx.BindJSON(&userDetails); err != nil {
+		errorMsg := "POST sign-in: bind json error"
+		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
+		log.Fatal(err)
+	}
+	password := []byte(userDetails.Password)
+	db := database.GetDB()
+	dbUser, err := database.GetUserByEmail(db, userDetails.Email)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = bcrypt.CompareHashAndPassword(password, []byte(dbUser.HashedPassword))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx.IndentedJSON(http.StatusOK, dbUser)
 }
