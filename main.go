@@ -1,21 +1,14 @@
 package main
 
 import (
-	"smartjobsolutions/controllers"
 	"smartjobsolutions/database"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"smartjobsolutions/routes"
 )
 
 func main() {
 	database.InitDB()
 
-	router := gin.Default()
-
-	router.Use(cors.Default())
-
-	router.POST("/sign-up", controllers.SignUp)
+	router := routes.SetupRouter()
 
 	router.Run(":8000")
 }
