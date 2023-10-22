@@ -14,14 +14,16 @@ import (
 func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
-		errorMsg := "POST sign-up: bind json error"
-		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
+		log.Print("SignUp Error binding json: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 	password := userDetails.Password
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 0)
 	if err != nil {
-		errorMsg := "POST sign-up: hashing err"
-		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
+		log.Print("SignUp Error generating password: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 	userDetailsDB := types.UserDetailsDB{
 		Username:       userDetails.Username,
@@ -40,21 +42,25 @@ func SignIn(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 
 	if err := ctx.BindJSON(&userDetails); err != nil {
-		errorMsg := "POST sign-in: bind json error"
-		ctx.IndentedJSON(http.StatusInternalServerError, errorMsg)
-		log.Fatal(err)
+		log.Print("SignIn Error binding json: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 	password := []byte(userDetails.Password)
 	db := database.GetDB()
 	dbUser, err := database.GetUserByEmail(db, userDetails.Email)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print("SignIn Error from db: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
 	}
 
-	err = bcrypt.CompareHashAndPassword(password, []byte(dbUser.HashedPassword))
+	err = bcrypt.CompareHashAndPassword([]byte(dbUser.HashedPassword), password)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("SignIn Error comparing hash and password", err)
+		ctx.IndentedJSON(http.StatusBadRequest, err)
+		return
 	}
 	ctx.IndentedJSON(http.StatusOK, dbUser)
 }

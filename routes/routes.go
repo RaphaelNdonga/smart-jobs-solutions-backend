@@ -15,6 +15,7 @@ func SetupRouter() *gin.Engine {
 	router = gin.Default()
 	router.Use(cors.Default())
 	router.POST("/sign-up", controllers.SignUp)
+	router.POST("/sign-in", controllers.SignIn)
 	return router
 }
 
