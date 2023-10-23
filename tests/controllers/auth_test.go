@@ -3,6 +3,7 @@ package controllers_test
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"smartjobsolutions/database"
@@ -10,10 +11,20 @@ import (
 	"smartjobsolutions/types"
 	"testing"
 
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
+func testSetup() {
+	database.InitDB()
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatal("testSetup error loading dotenv: ", err)
+	}
+}
+
 func Test_SignUp(t *testing.T) {
+	testSetup()
 	userDetails := types.UserDetails{
 		Username: "Raphael",
 		Email:    "raphael@gmail.com",
@@ -31,13 +42,13 @@ func Test_SignUp(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	database.InitDB()
 	router := routes.SetupRouter()
 	router.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code)
 }
 
 func Test_SignIn(t *testing.T) {
+	testSetup()
 	userDetails := types.UserDetails{
 		Email:    "nkibi53@gmail.com",
 		Password: "password",
@@ -52,7 +63,6 @@ func Test_SignIn(t *testing.T) {
 		t.Errorf("Test_SignIn Error: could not send request: %s", err)
 	}
 	rr := httptest.NewRecorder()
-	database.InitDB()
 	router := routes.SetupRouter()
 	router.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code)

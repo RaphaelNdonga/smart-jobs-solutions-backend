@@ -7,6 +7,8 @@ import (
 	"smartjobsolutions/database"
 	"smartjobsolutions/types"
 
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -35,6 +37,9 @@ func SignUp(ctx *gin.Context) {
 	fmt.Print("success: ", userDetailsDB)
 	db := database.GetDB()
 	database.AddUser(db, userDetailsDB)
+
+	jwt_key := os.Getenv("jwt_key")
+	log.Print("jwt key: ", jwt_key)
 	ctx.IndentedJSON(http.StatusOK, userDetailsDB)
 }
 
