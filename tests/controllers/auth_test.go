@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"smartjobsolutions/database"
 	"smartjobsolutions/routes"
 	"smartjobsolutions/types"
 	"testing"
@@ -30,6 +31,7 @@ func Test_SignUp(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
+	database.InitDB()
 	router := routes.SetupRouter()
 	router.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code)
@@ -50,6 +52,7 @@ func Test_SignIn(t *testing.T) {
 		t.Errorf("Test_SignIn Error: could not send request: %s", err)
 	}
 	rr := httptest.NewRecorder()
+	database.InitDB()
 	router := routes.SetupRouter()
 	router.ServeHTTP(rr, req)
 	assert.Equal(t, http.StatusOK, rr.Code)
