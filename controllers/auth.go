@@ -10,8 +10,26 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
+
+func generateJWT(email string) (string, error) {
+	var (
+		key          []byte
+		token        *jwt.Token
+		signedString string
+	)
+
+	key = []byte(os.Getenv("jwt_key"))
+	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"iss": "smartjobsolutions-server",
+		"sub": email,
+	})
+	signedString, err := token.SignedString(key)
+
+	return signedString, err
+}
 
 func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
@@ -38,8 +56,14 @@ func SignUp(ctx *gin.Context) {
 	db := database.GetDB()
 	database.AddUser(db, userDetailsDB)
 
-	jwt_key := os.Getenv("jwt_key")
-	log.Print("jwt key: ", jwt_key)
+	jwtToken, err := generateJWT(userDetails.Email)
+	log.Print("jwt-token: ", jwtToken)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.Header("access-control-expose-headers", "x-auth-token")
+	ctx.Header("x-auth-token", jwtToken)
 	ctx.IndentedJSON(http.StatusOK, userDetailsDB)
 }
 
