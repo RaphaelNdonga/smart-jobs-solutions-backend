@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func generateJWT(email string) (string, error) {
+func generateJWT(username string) (string, error) {
 	var (
 		key          []byte
 		token        *jwt.Token
@@ -24,7 +24,7 @@ func generateJWT(email string) (string, error) {
 	key = []byte(os.Getenv("jwt_key"))
 	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss": "smartjobsolutions-server",
-		"sub": email,
+		"sub": username,
 	})
 	signedString, err := token.SignedString(key)
 
@@ -56,7 +56,7 @@ func SignUp(ctx *gin.Context) {
 	db := database.GetDB()
 	database.AddUser(db, userDetailsDB)
 
-	jwtToken, err := generateJWT(userDetails.Email)
+	jwtToken, err := generateJWT(userDetails.Username)
 	log.Print("jwt-token: ", jwtToken)
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
@@ -91,5 +91,12 @@ func SignIn(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
+	jwtToken, err := generateJWT(userDetails.Username)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.Header("access-control-expose-headers", "x-auth-token")
+	ctx.Header("x-auth-token", jwtToken)
 	ctx.IndentedJSON(http.StatusOK, dbUser)
 }
