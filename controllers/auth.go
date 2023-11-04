@@ -49,6 +49,7 @@ func SignUp(ctx *gin.Context) {
 		Username:       userDetails.Username,
 		Email:          userDetails.Email,
 		HashedPassword: string(hash),
+		Location:       userDetails.Location,
 		UserType:       userDetails.UserType,
 	}
 

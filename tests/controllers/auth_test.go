@@ -29,6 +29,7 @@ func Test_SignUp(t *testing.T) {
 		Username: "Raphael",
 		Email:    "raphael@gmail.com",
 		Password: "hashedPassword",
+		Location: "Komarock",
 		UserType: "Employee",
 	}
 	jsonData, err := json.Marshal(userDetails)
@@ -50,7 +51,7 @@ func Test_SignUp(t *testing.T) {
 func Test_SignIn(t *testing.T) {
 	testSetup()
 	userDetails := types.UserDetails{
-		Email:    "nkibi53@gmail.com",
+		Email:    "raphael@gmail.com",
 		Password: "password",
 	}
 	jsonData, err := json.Marshal(userDetails)

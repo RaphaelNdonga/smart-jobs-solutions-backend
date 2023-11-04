@@ -34,7 +34,8 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) error {
 			$1,
 			$2,
 			$3,
-			$4
+			$4,
+			$5
 		)
 	`
 
