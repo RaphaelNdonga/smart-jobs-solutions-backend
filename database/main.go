@@ -30,7 +30,7 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) error {
 		return pingErr
 	}
 	query := `
-		INSERT INTO userDetails VALUES (
+		INSERT INTO userDetails (username, email, hashedpassword, location, usertype) VALUES (
 			$1,
 			$2,
 			$3,
@@ -39,7 +39,7 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) error {
 		)
 	`
 
-	_, queryErr := db.Exec(query, userDetails.Username, userDetails.Email, userDetails.HashedPassword, userDetails.UserType)
+	_, queryErr := db.Exec(query, userDetails.Username, userDetails.Email, userDetails.HashedPassword, userDetails.Location, userDetails.UserType)
 
 	if queryErr != nil {
 		return queryErr
