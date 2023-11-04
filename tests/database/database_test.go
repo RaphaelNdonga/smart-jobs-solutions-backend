@@ -38,7 +38,7 @@ func Test_AddUser(t *testing.T) {
 			userDetails.UserType,
 		).WillReturnResult(sqlmock.NewResult(1, 1))
 
-	err = database.AddUser(db, userDetails)
+	_, err = database.AddUser(db, userDetails)
 	if err != nil {
 		t.Errorf("unexpected error addUser: %s", err)
 	}
