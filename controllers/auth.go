@@ -55,7 +55,12 @@ func SignUp(ctx *gin.Context) {
 
 	fmt.Print("success: ", userDetailsDB)
 	db := database.GetDB()
-	database.AddUser(db, userDetailsDB)
+	id, err := database.AddUser(db, userDetailsDB)
+	if err != nil {
+		log.Print("SignUp Error fetching user id: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
 
 	jwtToken, err := generateJWT(userDetails.Username)
 	log.Print("jwt-token: ", jwtToken)
@@ -65,7 +70,7 @@ func SignUp(ctx *gin.Context) {
 	}
 	ctx.Header("access-control-expose-headers", "x-auth-token")
 	ctx.Header("x-auth-token", jwtToken)
-	ctx.IndentedJSON(http.StatusOK, userDetailsDB)
+	ctx.IndentedJSON(http.StatusOK, id)
 }
 
 func SignIn(ctx *gin.Context) {
