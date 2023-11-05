@@ -24,10 +24,10 @@ func GetDB() *sql.DB {
 	return db
 }
 
-func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (int, error) {
+func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (string, error) {
 	pingErr := db.Ping()
 	if pingErr != nil {
-		return 0, pingErr
+		return "", pingErr
 	}
 	query := `
 		INSERT INTO userDetails (username, email, hashedpassword, location, usertype) VALUES (
@@ -39,11 +39,11 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (int, error) {
 		)
 		RETURNING id;
 	`
-	var lastInsertId int
+	var lastInsertId string
 
 	queryErr := db.QueryRow(query, userDetails.Username, userDetails.Email, userDetails.HashedPassword, userDetails.Location, userDetails.UserType).Scan(&lastInsertId)
 	if queryErr != nil {
-		return 0, queryErr
+		return "", queryErr
 	}
 	return lastInsertId, nil
 }
