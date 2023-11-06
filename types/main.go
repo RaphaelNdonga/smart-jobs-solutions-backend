@@ -15,3 +15,15 @@ type UserDetailsDB struct {
 	Location       string
 	UserType       string
 }
+
+type ServiceProviderJSON struct {
+	Id          string `json:"id"`
+	Service     string `json:"service"`
+	Description string `json:"description"`
+}
+
+type ServiceProvider struct {
+	Id          string
+	Service     string
+	Description string
+}

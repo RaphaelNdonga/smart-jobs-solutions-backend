@@ -73,6 +73,28 @@ func SignUp(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, id)
 }
 
+func RegisterServiceProvider(ctx *gin.Context) {
+	serviceProviderJSON := types.ServiceProviderJSON{}
+
+	if err := ctx.BindJSON(&serviceProviderJSON); err != nil {
+		log.Print("RegisterServiceProvider json error: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	serviceProvider := types.ServiceProvider{
+		Id:          serviceProviderJSON.Id,
+		Service:     serviceProviderJSON.Service,
+		Description: serviceProviderJSON.Description,
+	}
+	if err := database.AddServiceProvider(database.GetDB(), serviceProvider); err != nil {
+		log.Print("RegisterServiceProvider database Error: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, serviceProvider)
+}
+
 func SignIn(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 

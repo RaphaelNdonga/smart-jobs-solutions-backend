@@ -11,6 +11,7 @@ import (
 	"smartjobsolutions/types"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
@@ -51,7 +52,7 @@ func Test_SignUp(t *testing.T) {
 func Test_SignIn(t *testing.T) {
 	testSetup()
 	userDetails := types.UserDetails{
-		Email:    "raphael@gmail.com",
+		Email:    "nkibi53@gmail.com",
 		Password: "password",
 	}
 	jsonData, err := json.Marshal(userDetails)
@@ -62,6 +63,29 @@ func Test_SignIn(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
 		t.Errorf("Test_SignIn Error: could not send request: %s", err)
+	}
+	rr := httptest.NewRecorder()
+	router := routes.SetupRouter()
+	router.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code)
+}
+
+func Test_RegisterServiceProvider(t *testing.T) {
+	testSetup()
+	serviceProvider := types.ServiceProvider{
+		Id:          uuid.New().String(),
+		Service:     "photography",
+		Description: "3d photographs",
+	}
+	jsonData, err := json.Marshal(serviceProvider)
+	log.Print("json data: ", jsonData)
+	if err != nil {
+		t.Errorf("Test_RegisterServiceProvider Error: Could not parse json: %s", err)
+	}
+	req, err := http.NewRequest("POST", "/sign-up/service-provider", bytes.NewBuffer(jsonData))
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		t.Errorf("Test_RegisterServiceProvider Error: could not send request: %s", err)
 	}
 	rr := httptest.NewRecorder()
 	router := routes.SetupRouter()

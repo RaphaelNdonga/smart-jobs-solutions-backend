@@ -30,7 +30,7 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (string, error) {
 		return "", pingErr
 	}
 	query := `
-		INSERT INTO userDetails (username, email, hashedpassword, location, usertype) VALUES (
+		INSERT INTO userDetails VALUES (
 			$1,
 			$2,
 			$3,
@@ -48,6 +48,25 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (string, error) {
 	return lastInsertId, nil
 }
 
+func AddServiceProvider(db *sql.DB, serviceProvider types.ServiceProvider) error {
+	pingErr := db.Ping()
+	if pingErr != nil {
+		return pingErr
+	}
+	query := `
+		INSERT INTO serviceProvider VALUES (
+			$1,
+			$2,
+			$3
+		)	
+	`
+	_, err := db.Exec(query, serviceProvider.Id, serviceProvider.Service, serviceProvider.Description)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {
 	userDetails := types.UserDetailsDB{}
 	pingErr := db.Ping()
@@ -63,12 +82,15 @@ func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {
 	if err != nil {
 		return userDetails, err
 	}
+	var id string
 	for rows.Next() {
 		err := rows.Scan(
+			&id,
 			&userDetails.Username,
 			&userDetails.Email,
 			&userDetails.HashedPassword,
 			&userDetails.UserType,
+			&userDetails.Location,
 		)
 		if err != nil {
 			return userDetails, err

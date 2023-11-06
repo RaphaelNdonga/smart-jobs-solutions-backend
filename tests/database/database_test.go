@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/google/uuid"
 )
 
 func Test_AddUser(t *testing.T) {
@@ -20,6 +21,7 @@ func Test_AddUser(t *testing.T) {
 		Username:       "Raphael",
 		Email:          "raphael@gmail.com",
 		HashedPassword: "hashedPassword",
+		Location:       "komarock",
 		UserType:       "Employee",
 	}
 	query := `
@@ -27,16 +29,19 @@ func Test_AddUser(t *testing.T) {
 			$1,
 			$2,
 			$3,
-			$4	
+			$4,
+			$5
 		)
 	`
-	mock.ExpectExec(query).
+	columns := []string{"id"}
+	mock.ExpectQuery(query).
 		WithArgs(
 			userDetails.Username,
 			userDetails.Email,
 			userDetails.HashedPassword,
+			userDetails.Location,
 			userDetails.UserType,
-		).WillReturnResult(sqlmock.NewResult(1, 1))
+		).WillReturnRows(sqlmock.NewRows(columns).AddRow(1, 1, 1, 1, 1))
 
 	_, err = database.AddUser(db, userDetails)
 	if err != nil {
@@ -68,5 +73,38 @@ func Test_GetUserByEmail(t *testing.T) {
 	}
 	if err = mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("Expectations wer not met: %s", err)
+	}
+}
+
+func Test_AddServiceProvider(t *testing.T) {
+	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
+	if err != nil {
+		t.Errorf("Test_AddServiceProvider Error mocking db: %s", err)
+	}
+	serviceProvider := types.ServiceProvider{
+		Id:          uuid.New().String(),
+		Service:     "photography",
+		Description: "I take 3d photographs",
+	}
+	query := `
+		INSERT INTO serviceProvider VALUES (
+			$1,
+			$2,
+			$3
+		)	
+	`
+	columns := []string{"id", "service", "description"}
+	mock.ExpectQuery(query).WithArgs(
+		serviceProvider.Id,
+		serviceProvider.Service,
+		serviceProvider.Description,
+	).WillReturnRows(sqlmock.NewRows(columns).AddRow(1, 1, 1, 1))
+
+	err = database.AddServiceProvider(db, serviceProvider)
+	if err != nil {
+		t.Errorf("Test_AddServiceProvider Error database adding service provider: %s", err)
+	}
+	if err = mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Test_AddServiceProvider Error expectations not met: %s", err)
 	}
 }
