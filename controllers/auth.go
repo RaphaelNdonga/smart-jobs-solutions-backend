@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func generateJWT(username string) (string, error) {
+func generateJWT(uuid string) (string, error) {
 	var (
 		key          []byte
 		token        *jwt.Token
@@ -24,7 +24,7 @@ func generateJWT(username string) (string, error) {
 	key = []byte(os.Getenv("jwt_key"))
 	token = jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss": "smartjobsolutions-server",
-		"sub": username,
+		"sub": uuid,
 	})
 	signedString, err := token.SignedString(key)
 
@@ -55,14 +55,14 @@ func SignUp(ctx *gin.Context) {
 
 	fmt.Print("success: ", userDetailsDB)
 	db := database.GetDB()
-	id, err := database.AddUser(db, userDetailsDB)
+	uuid, err := database.AddUser(db, userDetailsDB)
 	if err != nil {
 		log.Print("SignUp Error fetching user id: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	jwtToken, err := generateJWT(userDetails.Username)
+	jwtToken, err := generateJWT(uuid)
 	log.Print("jwt-token: ", jwtToken)
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
@@ -70,7 +70,7 @@ func SignUp(ctx *gin.Context) {
 	}
 	ctx.Header("access-control-expose-headers", "x-auth-token")
 	ctx.Header("x-auth-token", jwtToken)
-	ctx.IndentedJSON(http.StatusOK, id)
+	ctx.IndentedJSON(http.StatusOK, uuid)
 }
 
 func RegisterServiceProvider(ctx *gin.Context) {
@@ -81,12 +81,8 @@ func RegisterServiceProvider(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
+	serviceProvider := types.ServiceProvider(serviceProviderJSON)
 
-	serviceProvider := types.ServiceProvider{
-		Id:          serviceProviderJSON.Id,
-		Service:     serviceProviderJSON.Service,
-		Description: serviceProviderJSON.Description,
-	}
 	if err := database.AddServiceProvider(database.GetDB(), serviceProvider); err != nil {
 		log.Print("RegisterServiceProvider database Error: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
