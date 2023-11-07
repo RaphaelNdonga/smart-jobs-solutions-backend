@@ -91,6 +91,24 @@ func RegisterServiceProvider(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, serviceProvider)
 }
 
+func RegisterClient(ctx *gin.Context) {
+	clientJSON := types.ClientJSON{}
+	err := ctx.BindJSON(&clientJSON)
+	if err != nil {
+		log.Print("RegisterClient json error: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	client := types.Client(clientJSON)
+	err = database.AddClient(database.GetDB(), client)
+	if err != nil {
+		log.Print("RegisterClient database error: ", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, client)
+}
+
 func SignIn(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 

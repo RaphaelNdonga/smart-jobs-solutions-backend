@@ -27,3 +27,13 @@ type ServiceProvider struct {
 	Service     string
 	Description string
 }
+
+type ClientJSON struct {
+	Id      string `json:"uuid"`
+	Service string `json:"service"`
+}
+
+type Client struct {
+	Id      string
+	Service string
+}
