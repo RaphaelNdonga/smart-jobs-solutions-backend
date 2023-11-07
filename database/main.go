@@ -30,7 +30,7 @@ func AddUser(db *sql.DB, userDetails types.UserDetailsDB) (string, error) {
 		return "", pingErr
 	}
 	query := `
-		INSERT INTO userDetails VALUES (
+		INSERT INTO userDetails (username, email, hashedpassword, location, usertype) VALUES (
 			$1,
 			$2,
 			$3,
