@@ -17,7 +17,7 @@ type UserDetailsDB struct {
 }
 
 type ServiceProviderJSON struct {
-	Id          string `json:"id"`
+	Id          string `json:"uuid"`
 	Service     string `json:"service"`
 	Description string `json:"description"`
 }
