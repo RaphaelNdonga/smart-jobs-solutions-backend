@@ -83,7 +83,31 @@ func AddClient(db *sql.DB, client types.Client) error {
 		return err
 	}
 	return nil
+}
 
+func GetServiceProviders(db *sql.DB) ([]types.ServiceProvider, error) {
+	pingErr := db.Ping()
+
+	if pingErr != nil {
+		return []types.ServiceProvider{}, pingErr
+	}
+
+	query := `
+		SELECT * FROM serviceprovider 
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		return []types.ServiceProvider{}, err
+	}
+	var serviceProviderList []types.ServiceProvider
+	for rows.Next() {
+		var serviceProvider types.ServiceProvider
+		if err := rows.Scan(&serviceProvider.Id, &serviceProvider.Description, &serviceProvider.Service); err != nil {
+			return []types.ServiceProvider{}, err
+		}
+		serviceProviderList = append(serviceProviderList, serviceProvider)
+	}
+	return serviceProviderList, nil
 }
 
 func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {
