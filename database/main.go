@@ -85,29 +85,29 @@ func AddClient(db *sql.DB, client types.Client) error {
 	return nil
 }
 
-func GetServiceProviders(db *sql.DB) ([]types.ServiceProvider, error) {
+func GetServiceProviders(db *sql.DB) ([]types.ServiceProviderResponse, error) {
 	pingErr := db.Ping()
 
 	if pingErr != nil {
-		return []types.ServiceProvider{}, pingErr
+		return []types.ServiceProviderResponse{}, pingErr
 	}
 
 	query := `
-		SELECT * FROM serviceprovider 
+	SELECT userdetails.username, serviceprovider.service, serviceprovider.description FROM serviceprovider INNER JOIN userdetails on userdetails.id = serviceprovider.id;
 	`
 	rows, err := db.Query(query)
 	if err != nil {
-		return []types.ServiceProvider{}, err
+		return []types.ServiceProviderResponse{}, err
 	}
-	var serviceProviderList []types.ServiceProvider
+	var serviceProviderResponseList []types.ServiceProviderResponse
 	for rows.Next() {
-		var serviceProvider types.ServiceProvider
-		if err := rows.Scan(&serviceProvider.Id, &serviceProvider.Description, &serviceProvider.Service); err != nil {
-			return []types.ServiceProvider{}, err
+		var serviceProviderResponse types.ServiceProviderResponse
+		if err := rows.Scan(&serviceProviderResponse.Username, &serviceProviderResponse.Service, &serviceProviderResponse.Description); err != nil {
+			return []types.ServiceProviderResponse{}, err
 		}
-		serviceProviderList = append(serviceProviderList, serviceProvider)
+		serviceProviderResponseList = append(serviceProviderResponseList, serviceProviderResponse)
 	}
-	return serviceProviderList, nil
+	return serviceProviderResponseList, nil
 }
 
 func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {

@@ -17,15 +17,21 @@ type UserDetailsDB struct {
 }
 
 type ServiceProviderJSON struct {
-	Id          string `json:"uuid"`
-	Service     string `json:"service"`
-	Description string `json:"description"`
+	Id          string `json:"Id"`
+	Service     string `json:"Service"`
+	Description string `json:"Description"`
 }
 
 type ServiceProvider struct {
 	Id          string
 	Service     string
 	Description string
+}
+
+type ServiceProviderResponse struct {
+	Service     string
+	Description string
+	Username    string
 }
 
 type ClientJSON struct {
