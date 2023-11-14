@@ -67,24 +67,6 @@ func AddServiceProvider(db *sql.DB, serviceProvider types.ServiceProvider) error
 	return nil
 }
 
-func AddClient(db *sql.DB, client types.Client) error {
-	pingErr := db.Ping()
-	if pingErr != nil {
-		return pingErr
-	}
-	query := `
-		INSERT INTO client VALUES (
-			$1,
-			$2
-		)	
-	`
-	_, err := db.Exec(query, client.Id, client.Service)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func GetServiceProviders(db *sql.DB) ([]types.ServiceProviderResponse, error) {
 	pingErr := db.Ping()
 

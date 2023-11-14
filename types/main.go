@@ -43,3 +43,14 @@ type Client struct {
 	Id      string
 	Service string
 }
+
+type ClientPostJSON struct {
+	Id   string `json:"Id"`
+	Post string `json:"post"`
+}
+
+type ClientPostResponse struct {
+	Id        string
+	Post      string
+	Timestamp string
+}
