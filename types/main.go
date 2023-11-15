@@ -9,6 +9,7 @@ type UserDetails struct {
 }
 
 type UserDetailsDB struct {
+	Id             string
 	Username       string
 	Email          string
 	HashedPassword string

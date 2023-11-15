@@ -107,10 +107,9 @@ func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {
 	if err != nil {
 		return userDetails, err
 	}
-	var id string
 	for rows.Next() {
 		err := rows.Scan(
-			&id,
+			&userDetails.Id,
 			&userDetails.Username,
 			&userDetails.Email,
 			&userDetails.HashedPassword,

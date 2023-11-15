@@ -146,7 +146,7 @@ func SignIn(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
-	jwtToken, err := generateJWT(userDetails.Username)
+	jwtToken, err := generateJWT(dbUser.Id)
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
