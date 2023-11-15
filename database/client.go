@@ -30,10 +30,10 @@ func ClientPost(db *sql.DB, clientPost types.ClientPostJSON) (types.ClientPostRe
 	query := `
 		INSERT INTO clientposts VALUES (
 			$1,
-			$2,
-			NOW()	
+			NOW(),
+			$2
 		)	
-		RETURNING (id, post, created_at)
+		RETURNING id, post, created_at
 	`
 	var clientPostResponse types.ClientPostResponse
 	err := db.QueryRow(query, clientPost.Id, clientPost.Post).Scan(&clientPostResponse.Id, &clientPostResponse.Post, &clientPostResponse.Timestamp)

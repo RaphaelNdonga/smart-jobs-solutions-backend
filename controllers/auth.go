@@ -31,6 +31,19 @@ func generateJWT(uuid string) (string, error) {
 	return signedString, err
 }
 
+func VerifyJWT(tokenString string) (jwt.RegisteredClaims, error) {
+	claims := jwt.RegisteredClaims{}
+	_, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
+		key := []byte(os.Getenv("jwt_key"))
+		return key, nil
+	})
+	if err != nil {
+		return jwt.RegisteredClaims{}, err
+	}
+	log.Print("claims: ", claims)
+	return claims, nil
+}
+
 func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
