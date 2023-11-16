@@ -122,3 +122,25 @@ func GetUserByEmail(db *sql.DB, email string) (types.UserDetailsDB, error) {
 	}
 	return userDetails, err
 }
+
+func GetUserById(db *sql.DB, userId string) (types.UserDetailsDB, error) {
+	if err := db.Ping(); err != nil {
+		return types.UserDetailsDB{}, err
+	}
+	query := `
+		SELECT * FROM userdetails WHERE id = $1	
+	`
+	rows, err := db.Query(query, userId)
+	if err != nil {
+		return types.UserDetailsDB{}, err
+	}
+	var userdetails types.UserDetailsDB
+
+	for rows.Next() {
+		err := rows.Scan(&userdetails.Id, &userdetails.Email, &userdetails.HashedPassword, &userdetails.Location, &userdetails.UserType, &userdetails.Username)
+		if err != nil {
+			return types.UserDetailsDB{}, err
+		}
+	}
+	return userdetails, nil
+}

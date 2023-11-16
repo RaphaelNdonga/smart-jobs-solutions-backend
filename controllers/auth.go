@@ -155,3 +155,22 @@ func SignIn(ctx *gin.Context) {
 	ctx.Header("x-auth-token", jwtToken)
 	ctx.IndentedJSON(http.StatusOK, dbUser)
 }
+
+func GetUserType(ctx *gin.Context) {
+	token := ctx.Request.Header["X-Auth-Token"]
+	log.Print("x-auth-token: ", token)
+	claims, err := VerifyJWT(token[0])
+	if err != nil {
+		log.Print("GetUserType error verifying jwt", err)
+		ctx.IndentedJSON(http.StatusUnauthorized, err)
+		return
+	}
+	userId := claims.Subject
+	userdetails, err := database.GetUserById(database.GetDB(), userId)
+	if err != nil {
+		log.Print("GetUserType error getting userdetails", err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, userdetails.UserType)
+}
