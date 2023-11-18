@@ -43,3 +43,23 @@ func ClientPost(db *sql.DB, clientPost types.ClientPostJSON) (types.ClientPostRe
 	}
 	return clientPostResponse, err
 }
+
+func GetClientPosts(db *sql.DB) ([]types.ClientPostResponse, error) {
+	if err := db.Ping(); err != nil {
+		return []types.ClientPostResponse{}, err
+	}
+	query := `
+		SELECT * FROM clientposts 
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		return []types.ClientPostResponse{}, err
+	}
+	var clientPostResponses []types.ClientPostResponse
+	for rows.Next() {
+		var clientPostResponse types.ClientPostResponse
+		rows.Scan(&clientPostResponse.Id, &clientPostResponse.Post, &clientPostResponse.Timestamp)
+		clientPostResponses = append(clientPostResponses, clientPostResponse)
+	}
+	return clientPostResponses, nil
+}
