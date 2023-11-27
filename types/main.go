@@ -51,7 +51,8 @@ type ClientPostJSON struct {
 }
 
 type ClientPostResponse struct {
-	Id        string
+	Username  string
 	Post      string
-	Timestamp string
+	CreatedAt string
+	Location  string
 }

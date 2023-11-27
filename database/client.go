@@ -36,7 +36,7 @@ func ClientPost(db *sql.DB, clientPost types.ClientPostJSON) (types.ClientPostRe
 		RETURNING id, post, created_at
 	`
 	var clientPostResponse types.ClientPostResponse
-	err := db.QueryRow(query, clientPost.Id, clientPost.Post).Scan(&clientPostResponse.Id, &clientPostResponse.Post, &clientPostResponse.Timestamp)
+	err := db.QueryRow(query, clientPost.Id, clientPost.Post).Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt)
 
 	if err != nil {
 		return types.ClientPostResponse{}, err
@@ -49,8 +49,9 @@ func GetClientPosts(db *sql.DB) ([]types.ClientPostResponse, error) {
 		return []types.ClientPostResponse{}, err
 	}
 	query := `
-		SELECT * FROM clientposts 
+	SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id
 	`
+
 	rows, err := db.Query(query)
 	if err != nil {
 		return []types.ClientPostResponse{}, err
@@ -58,7 +59,7 @@ func GetClientPosts(db *sql.DB) ([]types.ClientPostResponse, error) {
 	var clientPostResponses []types.ClientPostResponse
 	for rows.Next() {
 		var clientPostResponse types.ClientPostResponse
-		rows.Scan(&clientPostResponse.Id, &clientPostResponse.Post, &clientPostResponse.Timestamp)
+		rows.Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt, &clientPostResponse.Location)
 		clientPostResponses = append(clientPostResponses, clientPostResponse)
 	}
 	return clientPostResponses, nil
