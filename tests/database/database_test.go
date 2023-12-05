@@ -87,7 +87,7 @@ func Test_AddProvider(t *testing.T) {
 		Description: "I take 3d photographs",
 	}
 	query := `
-		INSERT INTO serviceProvider VALUES (
+		INSERT INTO provider VALUES (
 			$1,
 			$2,
 			$3

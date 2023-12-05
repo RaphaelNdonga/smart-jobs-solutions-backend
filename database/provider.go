@@ -11,7 +11,7 @@ func AddProvider(db *sql.DB, provider types.Provider) error {
 		return pingErr
 	}
 	query := `
-		INSERT INTO serviceProvider VALUES (
+		INSERT INTO provider VALUES (
 			$1,
 			$2,
 			$3
@@ -32,7 +32,7 @@ func GetProviders(db *sql.DB) ([]types.ProviderResponse, error) {
 	}
 
 	query := `
-	SELECT userdetails.username, serviceprovider.service, serviceprovider.description FROM serviceprovider INNER JOIN userdetails on userdetails.id = serviceprovider.id;
+	SELECT userdetails.username, provider.service, provider.description FROM provider INNER JOIN userdetails on userdetails.id = provider.id;
 	`
 	rows, err := db.Query(query)
 	if err != nil {
