@@ -48,3 +48,20 @@ func GetServiceProviders(db *sql.DB) ([]types.ServiceProviderResponse, error) {
 	}
 	return serviceProviderResponseList, nil
 }
+
+func ServiceProviderPost(db *sql.DB, ServiceProviderPostJSON types.ServiceProviderPostJSON) error {
+	if err := db.Ping(); err != nil {
+		return err
+	}
+	query := `
+		INSERT INTO providerposts (id, post) VALUES (
+			$1,
+			$2
+		)
+	`
+	_, err := db.Exec(query, ServiceProviderPostJSON.Id, ServiceProviderPostJSON.Post)
+	if err != nil {
+		return err
+	}
+	return nil
+}

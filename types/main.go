@@ -50,7 +50,19 @@ type ClientPostJSON struct {
 	Post string `json:"post"`
 }
 
+type ServiceProviderPostJSON struct {
+	Id   string `json:"Id"`
+	Post string `json:"post"`
+}
+
 type ClientPostResponse struct {
+	Username  string
+	Post      string
+	CreatedAt string
+	Location  string
+}
+
+type ServiceProviderPostResponse struct {
 	Username  string
 	Post      string
 	CreatedAt string
