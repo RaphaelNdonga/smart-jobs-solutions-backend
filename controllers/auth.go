@@ -86,22 +86,22 @@ func SignUp(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, uuid)
 }
 
-func RegisterServiceProvider(ctx *gin.Context) {
-	serviceProviderJSON := types.ServiceProviderJSON{}
+func RegisterProvider(ctx *gin.Context) {
+	providerJSON := types.ProviderJSON{}
 
-	if err := ctx.BindJSON(&serviceProviderJSON); err != nil {
-		log.Print("RegisterServiceProvider json error: ", err)
+	if err := ctx.BindJSON(&providerJSON); err != nil {
+		log.Print("RegisterProvider json error: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	serviceProvider := types.ServiceProvider(serviceProviderJSON)
+	provider := types.Provider(providerJSON)
 
-	if err := database.AddServiceProvider(database.GetDB(), serviceProvider); err != nil {
-		log.Print("RegisterServiceProvider database Error: ", err)
+	if err := database.AddProvider(database.GetDB(), provider); err != nil {
+		log.Print("RegisterProvider database Error: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	ctx.IndentedJSON(http.StatusOK, serviceProvider)
+	ctx.IndentedJSON(http.StatusOK, provider)
 }
 
 func RegisterClient(ctx *gin.Context) {

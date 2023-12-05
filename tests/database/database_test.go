@@ -76,12 +76,12 @@ func Test_GetUserByEmail(t *testing.T) {
 	}
 }
 
-func Test_AddServiceProvider(t *testing.T) {
+func Test_AddProvider(t *testing.T) {
 	db, mock, err := sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))
 	if err != nil {
-		t.Errorf("Test_AddServiceProvider Error mocking db: %s", err)
+		t.Errorf("Test_AddProvider Error mocking db: %s", err)
 	}
-	serviceProvider := types.ServiceProvider{
+	provider := types.Provider{
 		Id:          uuid.New().String(),
 		Service:     "photography",
 		Description: "I take 3d photographs",
@@ -95,16 +95,16 @@ func Test_AddServiceProvider(t *testing.T) {
 	`
 	columns := []string{"id", "service", "description"}
 	mock.ExpectQuery(query).WithArgs(
-		serviceProvider.Id,
-		serviceProvider.Service,
-		serviceProvider.Description,
+		provider.Id,
+		provider.Service,
+		provider.Description,
 	).WillReturnRows(sqlmock.NewRows(columns).AddRow(1, 1, 1, 1))
 
-	err = database.AddServiceProvider(db, serviceProvider)
+	err = database.AddProvider(db, provider)
 	if err != nil {
-		t.Errorf("Test_AddServiceProvider Error database adding service provider: %s", err)
+		t.Errorf("Test_AddProvider Error database adding provider: %s", err)
 	}
 	if err = mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("Test_AddServiceProvider Error expectations not met: %s", err)
+		t.Errorf("Test_AddProvider Error expectations not met: %s", err)
 	}
 }

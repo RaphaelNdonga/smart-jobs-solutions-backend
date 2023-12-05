@@ -23,13 +23,13 @@ func SetupRouter() *gin.Engine {
 	}))
 	router.POST("/sign-up", controllers.SignUp)
 	router.POST("/sign-in", controllers.SignIn)
-	router.POST("/sign-up/service-provider", controllers.RegisterServiceProvider)
+	router.POST("/sign-up/provider", controllers.RegisterProvider)
 	router.POST("/sign-up/client", controllers.RegisterClient)
-	router.GET("/service-providers", middleware.Authenticate, controllers.GetServiceProviders)
+	router.GET("/providers", middleware.Authenticate, controllers.GetProviders)
 	router.GET("/clients", middleware.Authenticate, controllers.GetClientPosts)
 	router.GET("/user-type", controllers.GetUserType)
 	router.POST("/client/post", controllers.ClientPost)
-	router.POST("/service-providers/post", controllers.ServiceProviderPost)
+	router.POST("/providers/post", controllers.ProviderPost)
 	return router
 }
 

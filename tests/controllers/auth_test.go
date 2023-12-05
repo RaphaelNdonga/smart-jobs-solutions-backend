@@ -70,22 +70,22 @@ func Test_SignIn(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Code)
 }
 
-func Test_RegisterServiceProvider(t *testing.T) {
+func Test_RegisterProvider(t *testing.T) {
 	testSetup()
-	serviceProvider := types.ServiceProvider{
+	provider := types.Provider{
 		Id:          uuid.New().String(),
 		Service:     "photography",
 		Description: "3d photographs",
 	}
-	jsonData, err := json.Marshal(serviceProvider)
+	jsonData, err := json.Marshal(provider)
 	log.Print("json data: ", jsonData)
 	if err != nil {
-		t.Errorf("Test_RegisterServiceProvider Error: Could not parse json: %s", err)
+		t.Errorf("Test_RegisterProvider Error: Could not parse json: %s", err)
 	}
-	req, err := http.NewRequest("POST", "/sign-up/service-provider", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", "/sign-up/provider", bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
-		t.Errorf("Test_RegisterServiceProvider Error: could not send request: %s", err)
+		t.Errorf("Test_RegisterProvider Error: could not send request: %s", err)
 	}
 	rr := httptest.NewRecorder()
 	router := routes.SetupRouter()

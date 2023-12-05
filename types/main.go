@@ -17,19 +17,19 @@ type UserDetailsDB struct {
 	UserType       string
 }
 
-type ServiceProviderJSON struct {
+type ProviderJSON struct {
 	Id          string `json:"Id"`
 	Service     string `json:"Service"`
 	Description string `json:"Description"`
 }
 
-type ServiceProvider struct {
+type Provider struct {
 	Id          string
 	Service     string
 	Description string
 }
 
-type ServiceProviderResponse struct {
+type ProviderResponse struct {
 	Service     string
 	Description string
 	Username    string
@@ -50,7 +50,7 @@ type ClientPostJSON struct {
 	Post string `json:"post"`
 }
 
-type ServiceProviderPostJSON struct {
+type ProviderPostJSON struct {
 	Id   string `json:"Id"`
 	Post string `json:"post"`
 }
@@ -62,7 +62,7 @@ type ClientPostResponse struct {
 	Location  string
 }
 
-type ServiceProviderPostResponse struct {
+type ProviderPostResponse struct {
 	Username  string
 	Post      string
 	CreatedAt string
