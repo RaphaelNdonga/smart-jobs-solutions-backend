@@ -30,6 +30,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/user-type", controllers.GetUserType)
 	router.POST("/client/post", controllers.ClientPost)
 	router.POST("/providers/post", controllers.ProviderPost)
+	router.POST("/admin/add-service", controllers.AddService)
 	return router
 }
 

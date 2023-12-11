@@ -68,3 +68,7 @@ type ProviderPostResponse struct {
 	CreatedAt string
 	Location  string
 }
+
+type ServiceJSON struct {
+	Key_Service string `json:"key_service"`
+}
