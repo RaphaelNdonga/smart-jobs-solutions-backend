@@ -100,3 +100,29 @@ func GetUserById(db *sql.DB, userId string) (types.UserDetailsDB, error) {
 	}
 	return userdetails, nil
 }
+
+func GetServices(db *sql.DB) ([]types.Service, error) {
+	var services []types.Service
+	if err := db.Ping(); err != nil {
+		return services, err
+	}
+	query := `
+		SELECT * FROM services	
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		return services, err
+	}
+
+	for rows.Next() {
+		var service types.Service
+		err := rows.Scan(
+			&service.Key_Service,
+		)
+		services = append(services, service)
+		if err != nil {
+			return []types.Service{}, err
+		}
+	}
+	return services, nil
+}

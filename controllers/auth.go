@@ -174,3 +174,13 @@ func GetUserType(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, userdetails.UserType)
 }
+
+func GetServices(ctx *gin.Context) {
+	services, err := database.GetServices(database.GetDB())
+	if err != nil {
+		log.Print("GetServices error getting services: ", err)
+		ctx.IndentedJSON(http.StatusBadGateway, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, services)
+}

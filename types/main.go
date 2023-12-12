@@ -72,3 +72,7 @@ type ProviderPostResponse struct {
 type ServiceJSON struct {
 	Key_Service string `json:"key_service"`
 }
+
+type Service struct {
+	Key_Service string
+}
