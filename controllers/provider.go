@@ -10,7 +10,8 @@ import (
 )
 
 func GetProviders(ctx *gin.Context) {
-	providerList, err := database.GetProviders(database.GetDB())
+	service := ctx.Param("service")
+	providerList, err := database.GetProviders(database.GetDB(), service)
 	if err != nil {
 		log.Print("Error getting providers: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)

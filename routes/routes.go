@@ -25,7 +25,7 @@ func SetupRouter() *gin.Engine {
 	router.POST("/sign-in", controllers.SignIn)
 	router.POST("/sign-up/provider", controllers.RegisterProvider)
 	router.POST("/sign-up/client", controllers.RegisterClient)
-	router.GET("/providers", middleware.Authenticate, controllers.GetProviders)
+	router.GET("/providers/:service", middleware.Authenticate, controllers.GetProviders)
 	router.GET("/clients", middleware.Authenticate, controllers.GetClientPosts)
 	router.GET("/user-type", controllers.GetUserType)
 	router.POST("/client/post", controllers.ClientPost)

@@ -24,7 +24,7 @@ func AddProvider(db *sql.DB, provider types.Provider) error {
 	return nil
 }
 
-func GetProviders(db *sql.DB) ([]types.ProviderResponse, error) {
+func GetProviders(db *sql.DB, service string) ([]types.ProviderResponse, error) {
 	pingErr := db.Ping()
 
 	if pingErr != nil {
@@ -32,9 +32,9 @@ func GetProviders(db *sql.DB) ([]types.ProviderResponse, error) {
 	}
 
 	query := `
-	SELECT userdetails.username, provider.service, provider.description FROM provider INNER JOIN userdetails on userdetails.id = provider.id;
+	SELECT userdetails.username, provider.service, provider.description FROM provider INNER JOIN userdetails on userdetails.id = provider.id AND provider.service=$1;
 	`
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, service)
 	if err != nil {
 		return []types.ProviderResponse{}, err
 	}
