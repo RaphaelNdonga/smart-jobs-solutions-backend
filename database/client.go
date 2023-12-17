@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"log"
 	"smartjobsolutions/types"
 )
 
@@ -23,25 +24,22 @@ func AddClient(db *sql.DB, client types.Client) error {
 	return nil
 }
 
-func ClientPost(db *sql.DB, clientPost types.ClientPostJSON) (types.ClientPostResponse, error) {
+func ClientPost(db *sql.DB, clientPost types.PostJSON) error {
 	if err := db.Ping(); err != nil {
-		return types.ClientPostResponse{}, err
+		return err
 	}
+	log.Print("client post: ", clientPost)
 	query := `
 		INSERT INTO clientposts VALUES (
 			$1,
 			NOW(),
-			$2
+			$2,
+			$3
 		)	
-		RETURNING id, post, created_at
 	`
-	var clientPostResponse types.ClientPostResponse
-	err := db.QueryRow(query, clientPost.Id, clientPost.Post).Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt)
+	_, err := db.Exec(query, clientPost.Id, clientPost.Post, clientPost.Service)
 
-	if err != nil {
-		return types.ClientPostResponse{}, err
-	}
-	return clientPostResponse, err
+	return err
 }
 
 func GetClientPosts(db *sql.DB) ([]types.ClientPostResponse, error) {

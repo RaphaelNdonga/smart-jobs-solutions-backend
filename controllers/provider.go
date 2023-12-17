@@ -21,7 +21,7 @@ func GetProviders(ctx *gin.Context) {
 }
 
 func ProviderPost(ctx *gin.Context) {
-	var providerPost types.ProviderPostJSON
+	var providerPost types.PostJSON
 	if err := ctx.BindJSON(&providerPost); err != nil {
 		log.Print("ProviderPost Error getting post details: ", err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)

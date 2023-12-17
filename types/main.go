@@ -45,9 +45,10 @@ type Client struct {
 	Service string
 }
 
-type ClientPostJSON struct {
-	Id   string `json:"Id"`
-	Post string `json:"post"`
+type PostJSON struct {
+	Id      string `json:"Id"`
+	Post    string `json:"Post"`
+	Service string `json:"Service"`
 }
 
 type ProviderPostJSON struct {

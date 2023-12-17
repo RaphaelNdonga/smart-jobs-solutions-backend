@@ -10,8 +10,8 @@ import (
 )
 
 func ClientPost(ctx *gin.Context) {
-	var clientPostJSON types.ClientPostJSON
-	err := ctx.BindJSON(&clientPostJSON)
+	var postJSON types.PostJSON
+	err := ctx.BindJSON(&postJSON)
 	if err != nil {
 		log.Print("ClientPost error: ", err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)
@@ -27,17 +27,17 @@ func ClientPost(ctx *gin.Context) {
 	if err != nil {
 		log.Print("Client post error: ", err)
 	}
-	clientPostJSON.Id = claims.Subject
-	log.Print("claims subject: ", clientPostJSON.Id)
-	log.Print("client post json: ", clientPostJSON)
+	postJSON.Id = claims.Subject
+	log.Print("claims subject: ", postJSON.Id)
+	log.Print("client post json: ", postJSON)
 
-	clientPostResponse, err := database.ClientPost(database.GetDB(), clientPostJSON)
+	err = database.ClientPost(database.GetDB(), postJSON)
 	if err != nil {
 		log.Print("ClientPost error: ", err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
-	ctx.IndentedJSON(http.StatusOK, clientPostResponse)
+	ctx.IndentedJSON(http.StatusOK, postJSON)
 }
 
 func GetClientPosts(ctx *gin.Context) {

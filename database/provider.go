@@ -49,17 +49,18 @@ func GetProviders(db *sql.DB, service string) ([]types.ProviderResponse, error) 
 	return providerResponseList, nil
 }
 
-func ProviderPost(db *sql.DB, ProviderPostJSON types.ProviderPostJSON) error {
+func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 	if err := db.Ping(); err != nil {
 		return err
 	}
 	query := `
-		INSERT INTO providerposts (id, post) VALUES (
+		INSERT INTO providerposts (id, post, service) VALUES (
 			$1,
-			$2
+			$2,
+			$3
 		)
 	`
-	_, err := db.Exec(query, ProviderPostJSON.Id, ProviderPostJSON.Post)
+	_, err := db.Exec(query, ProviderPostJSON.Id, ProviderPostJSON.Post, ProviderPostJSON.Service)
 	if err != nil {
 		return err
 	}
