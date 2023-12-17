@@ -17,19 +17,8 @@ func ClientPost(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
-	token := ctx.Request.Header["X-Auth-Token"]
-	if token == nil {
-		log.Print("ClientPost error: token is nil")
-		ctx.IndentedJSON(http.StatusUnauthorized, token)
-		return
-	}
-	claims, err := VerifyJWT(token[0])
-	if err != nil {
-		log.Print("Client post error: ", err)
-	}
-	postJSON.Id = claims.Subject
-	log.Print("claims subject: ", postJSON.Id)
-	log.Print("client post json: ", postJSON)
+	clientId := ctx.GetString("userId")
+	postJSON.Id = clientId
 
 	err = database.ClientPost(database.GetDB(), postJSON)
 	if err != nil {

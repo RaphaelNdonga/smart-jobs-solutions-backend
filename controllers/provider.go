@@ -27,21 +27,13 @@ func ProviderPost(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
-	token := ctx.Request.Header["X-Auth-Token"]
-	if token == nil {
-		log.Print("ClientPost error: token is nil")
-		ctx.IndentedJSON(http.StatusUnauthorized, token)
-		return
-	}
-	claims, err := VerifyJWT(token[0])
-	if err != nil {
-		log.Print("Client post error: ", err)
-	}
-	providerPost.Id = claims.Subject
+	userId := ctx.GetString("userId")
+	log.Print("provider userid: ", userId)
+	providerPost.Id = userId
 
-	err = database.ProviderPost(database.GetDB(), providerPost)
+	err := database.ProviderPost(database.GetDB(), providerPost)
 	if err != nil {
-		log.Print("ProviderPost Error database: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
