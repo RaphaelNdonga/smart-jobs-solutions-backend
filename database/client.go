@@ -6,6 +6,21 @@ import (
 	"smartjobsolutions/types"
 )
 
+func GetClient(db *sql.DB, userId string) (types.Client, error) {
+	var client types.Client
+	if err := db.Ping(); err != nil {
+		return types.Client{}, err
+	}
+	query := `
+		SELECT * FROM client WHERE id = $1	
+	`
+	err := db.QueryRow(query, userId).Scan(&client)
+	if err != nil {
+		return types.Client{}, err
+	}
+	return client, nil
+}
+
 func AddClient(db *sql.DB, client types.Client) error {
 	pingErr := db.Ping()
 	if pingErr != nil {
@@ -42,23 +57,23 @@ func ClientPost(db *sql.DB, clientPost types.PostJSON) error {
 	return err
 }
 
-func GetClientPosts(db *sql.DB) ([]types.ClientPostResponse, error) {
+func GetClientPosts(db *sql.DB, service string) ([]types.ClientPostResponse, error) {
 	if err := db.Ping(); err != nil {
 		return []types.ClientPostResponse{}, err
 	}
 	query := `
-	SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id
+	SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location, clientposts.service FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id WHERE service = $1;
 	`
-
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, service)
 	if err != nil {
 		return []types.ClientPostResponse{}, err
 	}
 	var clientPostResponses []types.ClientPostResponse
 	for rows.Next() {
 		var clientPostResponse types.ClientPostResponse
-		rows.Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt, &clientPostResponse.Location)
+		rows.Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt, &clientPostResponse.Location, &clientPostResponse.Service)
 		clientPostResponses = append(clientPostResponses, clientPostResponse)
 	}
+	log.Print("clientpost responses: ", clientPostResponses)
 	return clientPostResponses, nil
 }

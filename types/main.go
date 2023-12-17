@@ -61,6 +61,7 @@ type ClientPostResponse struct {
 	Post      string
 	CreatedAt string
 	Location  string
+	Service   string
 }
 
 type ProviderPostResponse struct {

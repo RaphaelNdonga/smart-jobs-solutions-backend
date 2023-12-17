@@ -11,6 +11,7 @@ import (
 func main() {
 	database.InitDB()
 
+	log.SetFlags(log.Llongfile)
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Main error loading dotenv: ", err)

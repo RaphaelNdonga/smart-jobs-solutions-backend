@@ -49,6 +49,21 @@ func GetProviders(db *sql.DB, service string) ([]types.ProviderResponse, error) 
 	return providerResponseList, nil
 }
 
+func GetProvider(db *sql.DB, providerId string) (types.Provider, error) {
+	var provider types.Provider
+	if err := db.Ping(); err != nil {
+		return types.Provider{}, err
+	}
+	query := `
+		SELECT * FROM provider WHERE id = $1	
+	`
+	err := db.QueryRow(query, providerId).Scan(&provider.Id, &provider.Service, &provider.Description)
+	if err != nil {
+		return types.Provider{}, err
+	}
+	return provider, nil
+}
+
 func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 	if err := db.Ping(); err != nil {
 		return err

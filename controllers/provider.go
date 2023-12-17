@@ -47,3 +47,24 @@ func ProviderPost(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, providerPost)
 }
+
+func GetClientPosts(ctx *gin.Context) {
+	providerUserId := ctx.GetString("userId")
+
+	provider, err := database.GetProvider(database.GetDB(), providerUserId)
+
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	clientPosts, err := database.GetClientPosts(database.GetDB(), provider.Service)
+
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, clientPosts)
+}

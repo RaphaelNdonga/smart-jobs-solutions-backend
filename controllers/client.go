@@ -39,13 +39,3 @@ func ClientPost(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, postJSON)
 }
-
-func GetClientPosts(ctx *gin.Context) {
-	clientPosts, err := database.GetClientPosts(database.GetDB())
-	if err != nil {
-		log.Print("GetClientPosts error from database: ", err)
-		ctx.IndentedJSON(http.StatusInternalServerError, err)
-		return
-	}
-	ctx.IndentedJSON(http.StatusOK, clientPosts)
-}
