@@ -47,14 +47,14 @@ func VerifyJWT(tokenString string) (jwt.RegisteredClaims, error) {
 func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
-		log.Print("SignUp Error binding json: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	password := userDetails.Password
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 0)
 	if err != nil {
-		log.Print("SignUp Error generating password: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -70,7 +70,7 @@ func SignUp(ctx *gin.Context) {
 	db := database.GetDB()
 	uuid, err := database.AddUser(db, userDetailsDB)
 	if err != nil {
-		log.Print("SignUp Error fetching user id: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -78,6 +78,7 @@ func SignUp(ctx *gin.Context) {
 	jwtToken, err := generateJWT(uuid)
 	log.Print("jwt-token: ", jwtToken)
 	if err != nil {
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -90,14 +91,14 @@ func RegisterProvider(ctx *gin.Context) {
 	providerJSON := types.ProviderJSON{}
 
 	if err := ctx.BindJSON(&providerJSON); err != nil {
-		log.Print("RegisterProvider json error: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	provider := types.Provider(providerJSON)
 
 	if err := database.AddProvider(database.GetDB(), provider); err != nil {
-		log.Print("RegisterProvider database Error: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -108,14 +109,14 @@ func RegisterClient(ctx *gin.Context) {
 	clientJSON := types.ClientJSON{}
 	err := ctx.BindJSON(&clientJSON)
 	if err != nil {
-		log.Print("RegisterClient json error: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	client := types.Client(clientJSON)
 	err = database.AddClient(database.GetDB(), client)
 	if err != nil {
-		log.Print("RegisterClient database error: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -126,7 +127,7 @@ func SignIn(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 
 	if err := ctx.BindJSON(&userDetails); err != nil {
-		log.Print("SignIn Error binding json: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -135,19 +136,20 @@ func SignIn(ctx *gin.Context) {
 	dbUser, err := database.GetUserByEmail(db, userDetails.Email)
 
 	if err != nil {
-		log.Print("SignIn Error from db: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(dbUser.HashedPassword), password)
 	if err != nil {
-		log.Print("SignIn Error comparing hash and password", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
 	jwtToken, err := generateJWT(dbUser.Id)
 	if err != nil {
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -161,14 +163,14 @@ func GetUserType(ctx *gin.Context) {
 	log.Print("x-auth-token: ", token)
 	claims, err := VerifyJWT(token[0])
 	if err != nil {
-		log.Print("GetUserType error verifying jwt", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusUnauthorized, err)
 		return
 	}
 	userId := claims.Subject
 	userdetails, err := database.GetUserById(database.GetDB(), userId)
 	if err != nil {
-		log.Print("GetUserType error getting userdetails", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -178,7 +180,7 @@ func GetUserType(ctx *gin.Context) {
 func GetServices(ctx *gin.Context) {
 	services, err := database.GetServices(database.GetDB())
 	if err != nil {
-		log.Print("GetServices error getting services: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusBadGateway, err)
 		return
 	}

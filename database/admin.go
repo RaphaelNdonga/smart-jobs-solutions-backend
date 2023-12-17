@@ -2,12 +2,10 @@ package database
 
 import (
 	"database/sql"
-	"log"
 )
 
 func AddService(db *sql.DB, key_service string) error {
 	if err := db.Ping(); err != nil {
-		log.Print("AddService error pinging db: ", err)
 		return err
 	}
 
@@ -18,7 +16,6 @@ func AddService(db *sql.DB, key_service string) error {
 	_, err := db.Exec(query, key_service)
 
 	if err != nil {
-		log.Print("AddService error executing query: ", err)
 		return err
 	}
 

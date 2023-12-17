@@ -13,7 +13,7 @@ func ClientPost(ctx *gin.Context) {
 	var postJSON types.PostJSON
 	err := ctx.BindJSON(&postJSON)
 	if err != nil {
-		log.Print("ClientPost error: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}

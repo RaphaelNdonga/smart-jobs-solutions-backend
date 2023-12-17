@@ -12,7 +12,7 @@ import (
 func AddService(ctx *gin.Context) {
 	var serviceJSON types.ServiceJSON
 	if err := ctx.BindJSON(&serviceJSON); err != nil {
-		log.Print("AddService error binding json: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
@@ -23,7 +23,7 @@ func AddService(ctx *gin.Context) {
 	}
 	err := database.AddService(database.GetDB(), serviceJSON.Key_Service)
 	if err != nil {
-		log.Print("AddService error adding service to db: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}

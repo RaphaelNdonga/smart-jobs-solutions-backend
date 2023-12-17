@@ -13,7 +13,7 @@ func GetProviders(ctx *gin.Context) {
 	service := ctx.Param("service")
 	providerList, err := database.GetProviders(database.GetDB(), service)
 	if err != nil {
-		log.Print("Error getting providers: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
@@ -23,7 +23,7 @@ func GetProviders(ctx *gin.Context) {
 func ProviderPost(ctx *gin.Context) {
 	var providerPost types.PostJSON
 	if err := ctx.BindJSON(&providerPost); err != nil {
-		log.Print("ProviderPost Error getting post details: ", err)
+		log.Print(err)
 		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
