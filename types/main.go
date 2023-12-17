@@ -56,19 +56,12 @@ type ProviderPostJSON struct {
 	Post string `json:"post"`
 }
 
-type ClientPostResponse struct {
+type PostResponse struct {
 	Username  string
 	Post      string
 	CreatedAt string
 	Location  string
 	Service   string
-}
-
-type ProviderPostResponse struct {
-	Username  string
-	Post      string
-	CreatedAt string
-	Location  string
 }
 
 type ServiceJSON struct {

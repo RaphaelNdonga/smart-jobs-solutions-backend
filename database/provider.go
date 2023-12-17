@@ -81,3 +81,23 @@ func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 	}
 	return nil
 }
+
+func GetProviderPosts(db *sql.DB, service string) ([]types.PostResponse, error) {
+	if err := db.Ping(); err != nil {
+		return []types.PostResponse{}, err
+	}
+	query := `
+	SELECT userdetails.username, providerposts.post, providerposts.created_at, userdetails.location, providerposts.service FROM providerposts INNER JOIN userdetails ON userdetails.id = providerposts.id WHERE service = $1;
+	`
+	rows, err := db.Query(query, service)
+	if err != nil {
+		return []types.PostResponse{}, err
+	}
+	var providerPostResponses []types.PostResponse
+	for rows.Next() {
+		var providerPostResponse types.PostResponse
+		rows.Scan(&providerPostResponse.Username, &providerPostResponse.Post, &providerPostResponse.CreatedAt, &providerPostResponse.Location, &providerPostResponse.Service)
+		providerPostResponses = append(providerPostResponses, providerPostResponse)
+	}
+	return providerPostResponses, nil
+}

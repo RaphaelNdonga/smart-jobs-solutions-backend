@@ -14,7 +14,7 @@ func GetClient(db *sql.DB, userId string) (types.Client, error) {
 	query := `
 		SELECT * FROM client WHERE id = $1	
 	`
-	err := db.QueryRow(query, userId).Scan(&client)
+	err := db.QueryRow(query, userId).Scan(&client.Id, &client.Service)
 	if err != nil {
 		return types.Client{}, err
 	}
@@ -57,20 +57,20 @@ func ClientPost(db *sql.DB, clientPost types.PostJSON) error {
 	return err
 }
 
-func GetClientPosts(db *sql.DB, service string) ([]types.ClientPostResponse, error) {
+func GetClientPosts(db *sql.DB, service string) ([]types.PostResponse, error) {
 	if err := db.Ping(); err != nil {
-		return []types.ClientPostResponse{}, err
+		return []types.PostResponse{}, err
 	}
 	query := `
 	SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location, clientposts.service FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id WHERE service = $1;
 	`
 	rows, err := db.Query(query, service)
 	if err != nil {
-		return []types.ClientPostResponse{}, err
+		return []types.PostResponse{}, err
 	}
-	var clientPostResponses []types.ClientPostResponse
+	var clientPostResponses []types.PostResponse
 	for rows.Next() {
-		var clientPostResponse types.ClientPostResponse
+		var clientPostResponse types.PostResponse
 		rows.Scan(&clientPostResponse.Username, &clientPostResponse.Post, &clientPostResponse.CreatedAt, &clientPostResponse.Location, &clientPostResponse.Service)
 		clientPostResponses = append(clientPostResponses, clientPostResponse)
 	}
