@@ -159,15 +159,7 @@ func SignIn(ctx *gin.Context) {
 }
 
 func GetUserType(ctx *gin.Context) {
-	token := ctx.Request.Header["X-Auth-Token"]
-	log.Print("x-auth-token: ", token)
-	claims, err := VerifyJWT(token[0])
-	if err != nil {
-		log.Print(err)
-		ctx.IndentedJSON(http.StatusUnauthorized, err)
-		return
-	}
-	userId := claims.Subject
+	userId := ctx.GetString("userId")
 	userdetails, err := database.GetUserById(database.GetDB(), userId)
 	if err != nil {
 		log.Print(err)

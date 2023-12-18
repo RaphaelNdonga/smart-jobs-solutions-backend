@@ -25,12 +25,14 @@ func verifyJWT(tokenString string) (jwt.RegisteredClaims, error) {
 func AuthenticateUser(ctx *gin.Context) {
 	token := ctx.Request.Header["X-Auth-Token"]
 	if token == nil {
+		log.Print("X-Auth-Token nil")
 		ctx.IndentedJSON(http.StatusUnauthorized, "X-Auth-Token nil ")
 		ctx.Abort()
 		return
 	}
 	claims, err := verifyJWT(token[0])
 	if err != nil {
+		log.Print("Error verifying jwt")
 		ctx.IndentedJSON(http.StatusUnauthorized, "Error verifying jwt")
 		ctx.Abort()
 		return
