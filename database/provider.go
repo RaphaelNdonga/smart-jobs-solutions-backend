@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"smartjobsolutions/types"
 )
 
@@ -59,6 +60,13 @@ func GetProvider(db *sql.DB, providerId string) (types.Provider, error) {
 	`
 	err := db.QueryRow(query, providerId).Scan(&provider.Id, &provider.Service, &provider.Description)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return types.Provider{
+				Id:          "",
+				Service:     "",
+				Description: "",
+			}, nil
+		}
 		return types.Provider{}, err
 	}
 	return provider, nil
