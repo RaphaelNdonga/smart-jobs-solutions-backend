@@ -69,16 +69,12 @@ func GetClientPosts(db *sql.DB, service string) ([]types.PostResponse, error) {
 		query = `
 			SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location, clientposts.service FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id; 
 		`
-		localRows, localErr := db.Query(query)
-		rows = localRows
-		err = localErr
+		rows, err = db.Query(query)
 	} else {
 		query = `
 			SELECT userdetails.username, clientposts.post, clientposts.created_at, userdetails.location, clientposts.service FROM clientposts INNER JOIN userdetails ON userdetails.id = clientposts.id WHERE service = $1;
 		`
-		localRows, localErr := db.Query(query, service)
-		rows = localRows
-		err = localErr
+		rows, err = db.Query(query, service)
 	}
 	if err != nil {
 		return []types.PostResponse{}, err
