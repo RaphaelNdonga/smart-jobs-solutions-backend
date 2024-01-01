@@ -77,10 +77,12 @@ func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 		return err
 	}
 	query := `
-		INSERT INTO posts (id, post, service) VALUES (
+		INSERT INTO posts (id, created_at, post, service, user_type) VALUES (
 			$1,
+			NOW(),
 			$2,
-			$3
+			$3,
+			'provider'
 		)
 	`
 	_, err := db.Exec(query, ProviderPostJSON.Id, ProviderPostJSON.Post, ProviderPostJSON.Service)

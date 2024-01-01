@@ -45,11 +45,12 @@ func ClientPost(db *sql.DB, clientPost types.PostJSON) error {
 	}
 	log.Print("client post: ", clientPost)
 	query := `
-		INSERT INTO posts VALUES (
+		INSERT INTO posts (id, created_at, post, service, user_type) VALUES (
 			$1,
 			NOW(),
 			$2,
-			$3
+			$3,
+			'client'
 		)	
 	`
 	_, err := db.Exec(query, clientPost.Id, clientPost.Post, clientPost.Service)
