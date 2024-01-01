@@ -72,7 +72,7 @@ func GetClientPosts(db *sql.DB, service string) ([]types.PostResponse, error) {
 		rows, err = db.Query(query)
 	} else {
 		query = `
-			SELECT userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1;
+			SELECT userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'client';
 		`
 		rows, err = db.Query(query, service)
 	}

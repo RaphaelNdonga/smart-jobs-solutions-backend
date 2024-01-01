@@ -77,7 +77,7 @@ func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 		return err
 	}
 	query := `
-		INSERT INTO providerposts (id, post, service) VALUES (
+		INSERT INTO posts (id, post, service) VALUES (
 			$1,
 			$2,
 			$3
@@ -95,7 +95,7 @@ func GetProviderPosts(db *sql.DB, service string) ([]types.PostResponse, error) 
 		return []types.PostResponse{}, err
 	}
 	query := `
-	SELECT userdetails.username, providerposts.post, providerposts.created_at, userdetails.location, providerposts.service FROM providerposts INNER JOIN userdetails ON userdetails.id = providerposts.id WHERE service = $1;
+	SELECT userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'provider';
 	`
 	rows, err := db.Query(query, service)
 	if err != nil {
