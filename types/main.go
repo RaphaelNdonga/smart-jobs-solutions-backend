@@ -57,6 +57,7 @@ type ProviderPostJSON struct {
 }
 
 type PostResponse struct {
+	Id        string
 	Username  string
 	Post      string
 	CreatedAt string

@@ -97,7 +97,7 @@ func GetProviderPosts(db *sql.DB, service string) ([]types.PostResponse, error) 
 		return []types.PostResponse{}, err
 	}
 	query := `
-	SELECT userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'provider';
+	SELECT posts.id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'provider';
 	`
 	rows, err := db.Query(query, service)
 	if err != nil {
@@ -106,7 +106,7 @@ func GetProviderPosts(db *sql.DB, service string) ([]types.PostResponse, error) 
 	var providerPostResponses []types.PostResponse
 	for rows.Next() {
 		var providerPostResponse types.PostResponse
-		rows.Scan(&providerPostResponse.Username, &providerPostResponse.Post, &providerPostResponse.CreatedAt, &providerPostResponse.Location, &providerPostResponse.Service)
+		rows.Scan(&providerPostResponse.Id, &providerPostResponse.Username, &providerPostResponse.Post, &providerPostResponse.CreatedAt, &providerPostResponse.Location, &providerPostResponse.Service)
 		providerPostResponses = append(providerPostResponses, providerPostResponse)
 	}
 	return providerPostResponses, nil

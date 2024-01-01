@@ -33,6 +33,7 @@ func SetupRouter() *gin.Engine {
 	router.POST("/providers/post", middleware.AuthenticateUser, controllers.ProviderPost)
 	router.POST("/admin/add-service", controllers.AddService)
 	router.GET("/get-services", controllers.GetServices)
+	router.GET("/post/like/:postId", middleware.AuthenticateUser, controllers.LikePost)
 	return router
 }
 
