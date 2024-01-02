@@ -19,3 +19,15 @@ func LikePost(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, "Liked successfully")
 }
+
+func GetLikes(ctx *gin.Context) {
+	postId := ctx.Param("postId")
+	log.Print("postId: ", postId)
+	users, err := database.GetLikes(database.GetDB(), postId)
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, users)
+}

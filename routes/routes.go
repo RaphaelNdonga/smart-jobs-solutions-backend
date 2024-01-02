@@ -34,6 +34,7 @@ func SetupRouter() *gin.Engine {
 	router.POST("/admin/add-service", controllers.AddService)
 	router.GET("/get-services", controllers.GetServices)
 	router.GET("/post/like/:postId", middleware.AuthenticateUser, controllers.LikePost)
+	router.GET("/post/:postId/get-likes", middleware.AuthenticateUser, controllers.GetLikes)
 	return router
 }
 
