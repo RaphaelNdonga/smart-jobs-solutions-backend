@@ -10,6 +10,14 @@ func LikePost(db *sql.DB, userId string, postId string) error {
 	return err
 }
 
+func UnlikePost(db *sql.DB, userId string, postId string) error {
+	query := `
+		DELETE FROM likes WHERE post_id = $1 AND user_id = $2	
+	`
+	_, err := db.Exec(query, postId, userId)
+	return err
+}
+
 func GetLikes(db *sql.DB, postId string) ([]string, error) {
 	query := `
 		SELECT user_id FROM likes WHERE post_id = $1	
