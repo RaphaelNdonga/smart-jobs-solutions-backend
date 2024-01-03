@@ -14,7 +14,6 @@ func ClientPost(ctx *gin.Context) {
 	err := ctx.BindJSON(&postJSON)
 	if err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
 	clientId := ctx.GetString("userId")

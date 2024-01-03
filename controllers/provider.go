@@ -24,7 +24,6 @@ func ProviderPost(ctx *gin.Context) {
 	var providerPost types.PostJSON
 	if err := ctx.BindJSON(&providerPost); err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
 	userId := ctx.GetString("userId")

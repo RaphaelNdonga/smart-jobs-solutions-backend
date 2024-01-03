@@ -48,7 +48,6 @@ func SignUp(ctx *gin.Context) {
 	userDetails := types.UserDetails{}
 	if err := ctx.BindJSON(&userDetails); err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	password := userDetails.Password
@@ -92,7 +91,6 @@ func RegisterProvider(ctx *gin.Context) {
 
 	if err := ctx.BindJSON(&providerJSON); err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	provider := types.Provider(providerJSON)
@@ -110,7 +108,6 @@ func RegisterClient(ctx *gin.Context) {
 	err := ctx.BindJSON(&clientJSON)
 	if err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	client := types.Client(clientJSON)
@@ -128,7 +125,6 @@ func SignIn(ctx *gin.Context) {
 
 	if err := ctx.BindJSON(&userDetails); err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusInternalServerError, err)
 		return
 	}
 	password := []byte(userDetails.Password)

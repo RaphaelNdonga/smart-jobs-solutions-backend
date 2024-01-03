@@ -13,7 +13,6 @@ func AddService(ctx *gin.Context) {
 	var serviceJSON types.ServiceJSON
 	if err := ctx.BindJSON(&serviceJSON); err != nil {
 		log.Print(err)
-		ctx.IndentedJSON(http.StatusBadRequest, err)
 		return
 	}
 	if serviceJSON.Key_Service == "" {
