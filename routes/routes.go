@@ -36,6 +36,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/post/like/:postId", middleware.AuthenticateUser, controllers.LikePost)
 	router.GET("/post/unlike/:postId", middleware.AuthenticateUser, controllers.UnlikePost)
 	router.GET("/post/:postId/get-likes", middleware.AuthenticateUser, controllers.GetLikes)
+	router.POST("/post/comment/:postId", middleware.AuthenticateUser, controllers.CommentPost)
 	return router
 }
 

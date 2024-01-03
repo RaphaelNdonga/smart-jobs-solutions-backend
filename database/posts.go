@@ -31,3 +31,13 @@ func GetLikes(db *sql.DB, postId string) ([]string, error) {
 	}
 	return users, err
 }
+
+func CommentPost(db *sql.DB, postId string, userId string, comment string) error {
+	query := `
+		INSERT INTO comments (post_id, user_id, comment, created_at) VALUES (
+			$1, $2, $3, NOW()
+		)	
+	`
+	_, err := db.Exec(query, postId, userId, comment)
+	return err
+}

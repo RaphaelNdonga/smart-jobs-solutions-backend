@@ -34,7 +34,6 @@ func UnlikePost(ctx *gin.Context) {
 
 func GetLikes(ctx *gin.Context) {
 	postId := ctx.Param("postId")
-	log.Print("postId: ", postId)
 	users, err := database.GetLikes(database.GetDB(), postId)
 	if err != nil {
 		log.Print(err)
@@ -42,4 +41,23 @@ func GetLikes(ctx *gin.Context) {
 		return
 	}
 	ctx.IndentedJSON(http.StatusOK, users)
+}
+
+func CommentPost(ctx *gin.Context) {
+	postId := ctx.Param("postId")
+	userId := ctx.GetString("userId")
+	type CommentPostJson struct {
+		Comment string `json:"Comment"`
+	}
+	var commentPost CommentPostJson
+	if err := ctx.BindJSON(&commentPost); err != nil {
+		log.Print(err)
+		return
+	}
+	err := database.CommentPost(database.GetDB(), postId, userId, commentPost.Comment)
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, "Commented successfully")
+		return
+	}
 }
