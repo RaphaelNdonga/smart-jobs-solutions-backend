@@ -1,6 +1,9 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+	"smartjobsolutions/types"
+)
 
 func LikePost(db *sql.DB, userId string, postId string) error {
 	query := `
@@ -40,4 +43,21 @@ func CommentPost(db *sql.DB, postId string, userId string, comment string) error
 	`
 	_, err := db.Exec(query, postId, userId, comment)
 	return err
+}
+
+func GetComments(db *sql.DB, postId string) ([]types.CommentResponse, error) {
+	query := `
+	SELECT userdetails.username, comments.comment, comments.created_at FROM comments INNER JOIN userdetails ON userdetails.id = comments.user_id;	
+	`
+	rows, err := db.Query(query)
+	if err != nil {
+		return []types.CommentResponse{}, err
+	}
+	var comments []types.CommentResponse
+	for rows.Next() {
+		var comment types.CommentResponse
+		rows.Scan(&comment.Username, &comment.Comment, &comment.CreatedAt)
+		comments = append(comments, comment)
+	}
+	return comments, nil
 }

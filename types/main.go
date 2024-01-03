@@ -72,3 +72,9 @@ type ServiceJSON struct {
 type Service struct {
 	Key_Service string
 }
+
+type CommentResponse struct {
+	Username  string
+	Comment   string
+	CreatedAt string
+}
