@@ -47,9 +47,9 @@ func CommentPost(db *sql.DB, postId string, userId string, comment string) error
 
 func GetComments(db *sql.DB, postId string) ([]types.CommentResponse, error) {
 	query := `
-	SELECT userdetails.username, comments.comment, comments.created_at FROM comments INNER JOIN userdetails ON userdetails.id = comments.user_id;	
+	SELECT userdetails.username, comments.comment, comments.created_at FROM comments INNER JOIN userdetails ON userdetails.id = comments.user_id WHERE comments.post_id = $1
 	`
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, postId)
 	if err != nil {
 		return []types.CommentResponse{}, err
 	}
