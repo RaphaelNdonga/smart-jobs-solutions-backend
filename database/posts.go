@@ -23,7 +23,7 @@ func UnlikePost(db *sql.DB, userId string, postId string) error {
 
 func GetLikes(db *sql.DB, postId string) ([]string, error) {
 	query := `
-		SELECT post_id FROM likes WHERE post_id = $1	
+		SELECT user_id FROM likes WHERE post_id = $1	
 	`
 	rows, err := db.Query(query, postId)
 	var users []string
