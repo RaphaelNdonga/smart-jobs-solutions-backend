@@ -12,4 +12,5 @@ func SetupAuthRoutes() {
 	router.POST("/sign-up/client", controllers.RegisterClient)
 	router.GET("/user-type", middleware.AuthenticateUser, controllers.GetUserType)
 	router.GET("/userdata", middleware.AuthenticateUser, controllers.GetUserData)
+	router.GET("/userposts", middleware.AuthenticateUser, controllers.GetUserPosts)
 }

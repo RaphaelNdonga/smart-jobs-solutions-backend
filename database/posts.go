@@ -61,3 +61,23 @@ func GetComments(db *sql.DB, postId string) ([]types.CommentResponse, error) {
 	}
 	return comments, nil
 }
+
+func GetUserPosts(db *sql.DB, userId string) ([]types.PostResponse, error) {
+	query := `
+		SELECT posts.post_id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.user_id WHERE posts.user_id = $1; 
+	`
+	rows, err := db.Query(query, userId)
+
+	if err != nil {
+		return []types.PostResponse{}, err
+	}
+
+	var posts []types.PostResponse
+
+	for rows.Next() {
+		var post types.PostResponse
+		rows.Scan(&post.Id, &post.Username, &post.Post, &post.CreatedAt, &post.Location, &post.Service)
+		posts = append(posts, post)
+	}
+	return posts, nil
+}

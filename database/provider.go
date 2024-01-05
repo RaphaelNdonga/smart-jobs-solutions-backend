@@ -77,7 +77,7 @@ func ProviderPost(db *sql.DB, ProviderPostJSON types.PostJSON) error {
 		return err
 	}
 	query := `
-		INSERT INTO posts (id, created_at, post, service, user_type) VALUES (
+		INSERT INTO posts (user_id, created_at, post, service, user_type) VALUES (
 			$1,
 			NOW(),
 			$2,

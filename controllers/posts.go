@@ -72,3 +72,14 @@ func GetComments(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, comments)
 }
+
+func GetUserPosts(ctx *gin.Context) {
+	userId := ctx.GetString("userId")
+	posts, err := database.GetUserPosts(database.GetDB(), userId)
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.IndentedJSON(http.StatusOK, posts)
+}
