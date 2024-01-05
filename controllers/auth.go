@@ -174,3 +174,24 @@ func GetServices(ctx *gin.Context) {
 	}
 	ctx.IndentedJSON(http.StatusOK, services)
 }
+
+func GetUserData(ctx *gin.Context) {
+	userId := ctx.GetString("userId")
+	userdetails, err := database.GetUserById(database.GetDB(), userId)
+	if err != nil {
+		log.Print(err)
+		ctx.IndentedJSON(http.StatusInternalServerError, err)
+		return
+	}
+	type Profile struct {
+		Username string
+		Location string
+	}
+	profile := Profile{
+		Location: userdetails.Location,
+		Username: userdetails.Username,
+	}
+
+	ctx.IndentedJSON(http.StatusOK, profile)
+
+}

@@ -2,7 +2,6 @@ package routes
 
 import (
 	"smartjobsolutions/controllers"
-	"smartjobsolutions/middleware"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -25,7 +24,6 @@ func SetupRouter() *gin.Engine {
 	SetupClientRoutes()
 	SetupProviderRoutes()
 	SetupAuthRoutes()
-	router.GET("/user-type", middleware.AuthenticateUser, controllers.GetUserType)
 	router.POST("/admin/add-service", controllers.AddService)
 	router.GET("/get-services", controllers.GetServices)
 	return router

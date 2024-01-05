@@ -93,7 +93,7 @@ func GetUserById(db *sql.DB, userId string) (types.UserDetailsDB, error) {
 	var userdetails types.UserDetailsDB
 
 	for rows.Next() {
-		err := rows.Scan(&userdetails.Id, &userdetails.Email, &userdetails.HashedPassword, &userdetails.Location, &userdetails.UserType, &userdetails.Username)
+		err := rows.Scan(&userdetails.Id, &userdetails.Username, &userdetails.Email, &userdetails.HashedPassword, &userdetails.UserType, &userdetails.Location)
 		if err != nil {
 			return types.UserDetailsDB{}, err
 		}
