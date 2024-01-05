@@ -45,7 +45,7 @@ func ClientPost(db *sql.DB, clientPost types.PostJSON) error {
 	}
 	log.Print("client post: ", clientPost)
 	query := `
-		INSERT INTO posts (id, created_at, post, service, user_type) VALUES (
+		INSERT INTO posts (user_id, created_at, post, service, user_type) VALUES (
 			$1,
 			NOW(),
 			$2,
@@ -68,12 +68,12 @@ func GetClientPosts(db *sql.DB, service string) ([]types.PostResponse, error) {
 
 	if service == "" {
 		query = `
-			SELECT posts.id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id; 
+			SELECT posts.post_id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.user_id; 
 		`
 		rows, err = db.Query(query)
 	} else {
 		query = `
-			SELECT posts.id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'client';
+			SELECT posts.post_id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.user_id WHERE service = $1 AND user_type = 'client';
 		`
 		rows, err = db.Query(query, service)
 	}

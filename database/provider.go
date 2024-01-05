@@ -97,7 +97,7 @@ func GetProviderPosts(db *sql.DB, service string) ([]types.PostResponse, error) 
 		return []types.PostResponse{}, err
 	}
 	query := `
-	SELECT posts.id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.id WHERE service = $1 AND user_type = 'provider';
+	SELECT posts.post_id, userdetails.username, posts.post, posts.created_at, userdetails.location, posts.service FROM posts INNER JOIN userdetails ON userdetails.id = posts.user_id WHERE service = $1 AND user_type = 'provider';
 	`
 	rows, err := db.Query(query, service)
 	if err != nil {
